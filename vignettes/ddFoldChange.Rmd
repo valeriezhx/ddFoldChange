@@ -1,0 +1,51 @@
+---
+title: "ddFoldChange"
+author: "Xia Zhao"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ddFoldChange}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+#### Introduction
+
+#### The `ddFoldChange` package provides tools for processing quantitative PCR (qPCR) data to calculate delta Ct, delta Ct, and fold changes for gene expression analysis. This vignette demonstrates how to use the main functions in the package.
+
+
+#### Load the package
+```{r}
+library(ddFoldChange)
+```
+
+
+#### Example Data
+#### Here using a dataset in the CSV format (ct_test.csv) to demonstrate how to use this R package. The dataset includes 5 colums and 9 rows. Each row represents one sample or replicate. The first column is "ID", the second is "trt", and the third to the fifth column are corresponding to Ct values of the housekeeping gene (x) and 2 genes interested (y,and z). for each treatment, there are 3 replicated in total. The dataset was saved both as an internal dataset and an external dataset. The external file path is "inst/extdata/ct_test.csv". 
+
+```{r}
+head(ct_test) # check as the internal file
+```
+
+#### Using *process.data* in ddFoldChange
+
+```{r}
+
+# run the R-code using the csv version of the dataset, replicate is 3. The output file will be print out directly. Columns 7 & 8 are delta Ct values, columns 9 & 10 are delta delta Ct values and columns 11 & 12 are gene fold changes relative to the control group. The file was saved as CSV file named "processed_data.csv".
+
+file.path <- system.file("extdata", "ct_test.csv", package = "ddFoldChange")
+process.data(file.path, 3,"ct.output") # replicate=3, output_file="ct_output"
+
+```
+
+
+#### Using *plot_FC* to plot bar graph 
+
+```{r}
+
+# first read "processed_data.csv" to df_process, and then run the plot function. The bar plots will be created for each gene interested.
+
+df.process <- read.csv("ct.output", header = TRUE, sep = ',')
+plot_FC(df.process)
+
+```
+
