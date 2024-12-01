@@ -1,0 +1,75 @@
+---
+title: "Introduction of using ddFoldChange package to analyze RT-PCR gene expression data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ddFoldChange}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+1. Input file preparation
+
+The input data must be in a .csv file with the following structure:
+
+Columns:
+The first column is labeled ID and contains unique sample identifiers.
+The second column, named trt, specifies the treatment groups.
+The third column contains Ct values for the housekeeping gene.
+The remaining columns contain Ct values for the target genes of interest.
+
+Note: The column names ID and trt must remain unchanged. The subsequent column names should be gene symbols representing the housekeeping gene and target genes.
+
+Rows:
+Control samples must be placed in the first rows of the file.
+Each ID should have an equal number of replicates, with Ct values for each replicate occupying one row.
+
+Example:
+In this example, there are 3 replicates per sample ID.
+The control samples are in rows 1–3.
+"x" is used as the housekeeping gene, and gene y, gene z, etc., are the target genes of interest.
+ 
+```{r}
+file_path <- system.file("extdata", "ct_test.csv", package = "ddFoldChange")
+df <- read.csv(file_path, header = TRUE, sep = ",")
+df
+
+```
+
+2. Process the input data to calculate fold changes 
+
+The data processing is in a flow of Delta Delta Ct Method:
+Using the ProcessData function, we can transform the original Ct values into calculated values for Delta Ct, Delta Delta Ct, and relative fold changes. This function follows the workflow of the Delta Delta Ct method, which involves the following steps:
+
+1) Calculate Delta Ct:
+
+Compute the average Ct for the control samples.
+Calculate the difference between the Ct value of the gene of interest and the housekeeping gene.
+This step normalizes the expression of the target gene to a reference gene unaffected by the experimental conditions.
+
+2) Calculate Delta Delta Ct:
+
+Subtract the average Delta Ct of the control samples from the Delta Ct of the experimental samples. This step determines the relative expression level compared to the control group.
+
+3) Calculate Fold Gene Expression:
+
+Use the formula 2^(-Delta Delta Ct) to calculate the fold change in gene expression for each sample.
+
+This provides the relative expression level of the target gene compared to the control group.
+By following this structured approach, the ProcessData function efficiently handles the computations and outputs processed data ready for downstream analysis.
+
+```{r}
+library(ddFoldChange)
+
+file_path <- system.file("extdata", "ct_test.csv", package = "ddFoldChange")
+output_file <- "processed_ct_test.csv"
+df.process<- ProcessData(file.path = file_path, replicate = 3, output.file = output_file)
+head(df.process)
+```
+
+3. Plot Fold Change for Target Genes
+In this step, the normalized fold changes for each gene of interest are visualized using ggplot2. The plots display fold change values across different treatment groups, making it easy to compare and assess differences in gene expression among the groups. These visualizations provide a clear and intuitive representation of the experimental results.
+
+```{r}
+PlotFC(df.process)
+```
