@@ -1,5 +1,5 @@
 Package: ddFoldChange
-Title: Calculate Gene Fold Change
+Title: ddFoldChange
 Version: 0.0.0.9000
 Authors@R: person("Xia", "Zhao", email = "zhao.xia@ufl.edu",role = c("aut", "cre"))
 Description: The `ddFoldChange` package provides tools for processing quantitative PCR (qPCR) data to calculate delta Ct, delta Ct, and fold changes for gene expression analysis. This vignette demonstrates how to use the main functions in the package.
