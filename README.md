@@ -6,7 +6,7 @@ This is a R package to analyze RT-PCR results by using delta-delta CT (ΔΔCT) m
 
 Install the package from GitHub in R:
 
-  devtools::install_github("valeriezhx/ddFoldChange")
+  devtools::install_github("valeriezhx/ddFoldChange", build_vignettes = TRUE, force=TRUE)
 
 library(ddFoldChange)
 
